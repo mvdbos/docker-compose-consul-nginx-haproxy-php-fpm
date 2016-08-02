@@ -1,0 +1,40 @@
+version: "2"
+services:
+    consul:
+        command: agent -server -bootstrap-expect=1 -client=0.0.0.0
+        image: consul:latest
+
+    registrator:
+        command: -internal consul://consul:8500
+        image: gliderlabs/registrator:latest
+        links:
+            - consul
+        volumes:
+          - "/var/run/docker.sock:/tmp/docker.sock"
+
+    haproxy:
+        build: ./haproxy
+        links:
+            - consul
+        depends_on:
+            - registrator
+
+    nginx:
+        build: ./nginx
+        ports:
+            - "8080:80"
+        volumes:
+            - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+        links:
+            - haproxy
+
+    php:
+        environment:
+            - SERVICE_NAME=app
+            - SERVICE_TAGS=php
+        build: ./php
+        volumes:
+            - ./php/src:/src
+        depends_on:
+            - haproxy 
+

@@ -1,0 +1,12 @@
+frontend fpm-frontend
+    bind *:9000
+    mode tcp
+    default_backend fpm-nodes
+
+backend fpm-nodes
+    mode tcp
+    balance roundrobin
+
+    {{range $i,$a:=service "php.app"}}
+        server host{{$i}} {{$a.Address}}:{{$a.Port}} check
+    {{end}}
