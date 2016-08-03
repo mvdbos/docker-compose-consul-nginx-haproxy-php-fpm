@@ -29,6 +29,7 @@ services:
             - haproxy
 
     php:
+        mem_limit: 200m
         environment:
             - SERVICE_NAME=app
             - SERVICE_TAGS=php

@@ -4,18 +4,4 @@ template {
   command = "haproxy -f /usr/local/etc/haproxy/haproxy.cfg -D -sf $(pidof haproxy)"
 }
 
-// This block defines the configuration for connecting to a syslog server for
-// logging.
-//syslog {
-//  // This enables syslog logging. Specifying any other option also enables
-//  // syslog logging.
-//  enabled = true
-//
-//  // This is the name of the syslog facility to log to.
-//  facility = "LOCAL5"
-//}
-
-// This is the log level. If you find a bug in Consul Template, please enable
-// debug logs so we can help identify the issue. This is also available as a
-// command line flag.
-log_level = "debug"
+log_level = "warn"
